@@ -10,7 +10,7 @@ class Estoque:
         self.adicionar(Bola("B01", "Bola de Futsal", "Futsal"))
         self.adicionar(Bola("B02", "Bola de Volei", "Volei"))
         self.adicionar(Bola("B03", "Bola de Basquete", "Basquete"))
-        self.adicionar(Colete("C01", "Colete Azul"))
+        self.adicionar(Colete("C01", "Colete da XII"))
         self.adicionar(Raquete("R01", "Raquete de Tenis de Mesa"))
         self.adicionar(Bicicleta("BI01", "Bicicleta 01"))
 

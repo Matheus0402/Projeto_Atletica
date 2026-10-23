@@ -1,5 +1,5 @@
-
 from datetime import date, timedelta
+from abc import ABC, abstractmethod
 
 
 def analisar_emprestimo(data_prevista):
@@ -9,51 +9,85 @@ def analisar_emprestimo(data_prevista):
         return "Atrasado"
 
     elif hoje == data_prevista:
-        return "Vence hoje"
+        return "Vencimento Proximo"
 
     return "Em dia"
 
 
-class Equipamento:
+class Equipamento(ABC):
     def __init__(self, codigo, nome):
-        self.codigo = codigo
-        self.nome = nome
-        self.disponivel = True
-        self.categoria = "equipamento"
+        self.__codigo = codigo
+        self.__nome = nome
+        self.__disponivel = True
+        self.__categoria = "equipamento"
 
-        self.data_emprestimo = None
-        self.data_devolucao_prevista = None
-        self.data_devolucao_real = None
+        self.__data_emprestimo = None
+        self.__data_devolucao_prevista = None
+        self.__data_devolucao_real = None
 
+    @abstractmethod
     def prazo_dias(self):
-        return 0
+        pass
 
+    @property
+    def codigo(self):
+        return self.__codigo
+
+    @property
+    def nome(self):
+        return self.__nome
+
+    @property
+    def disponivel(self):
+        return self.__disponivel
+
+    @property
+    def categoria(self):
+        return self.__categoria
+
+    @property
+    def data_emprestimo(self):
+        return self.__data_emprestimo
+
+    @property
+    def data_devolucao_prevista(self):
+        return self.__data_devolucao_prevista
+
+    @property
+    def data_devolucao_real(self):
+        return self.__data_devolucao_real
+
+    def _definir_categoria(self, categoria):
+        self.__categoria = categoria
+
+ 
     def registrar_emprestimo(self):
-        self.data_emprestimo = date.today()
+        self.__data_emprestimo = date.today()
 
         prazo = self.prazo_dias()
 
-        self.data_devolucao_prevista = (
-            self.data_emprestimo + timedelta(days=prazo)
+        self.__data_devolucao_prevista = (
+            self.__data_emprestimo + timedelta(days=prazo) # isso aqui eh massa hein
         )
 
-        self.data_devolucao_real = None
-        self.disponivel = False
+        self.__data_devolucao_real = None
+        self.__disponivel = False
 
     def verificar_situacao(self):
-        if self.data_devolucao_real is not None:
+        if self.__data_devolucao_real is not None:
             return "Devolvido"
 
-        if self.data_devolucao_prevista is None:
+        if self.__data_devolucao_prevista is None:
             return "Sem prazo definido"
 
         return analisar_emprestimo(
-            self.data_devolucao_prevista
+            self.__data_devolucao_prevista
         )
 
     def realizar_devolucao(self):
-        self.data_devolucao_real = date.today()
-        self.disponivel = True
+        self.__data_devolucao_real = date.today()
+        self.__disponivel = True
+
 
     def realizar_vistoria(self):
         return "Este equipamento nao precisa de vistoria especial."
@@ -63,7 +97,7 @@ class Bola(Equipamento):
     def __init__(self, codigo, nome, esporte):
         super().__init__(codigo, nome)
         self.esporte = esporte
-        self.categoria = "bola"
+        self._definir_categoria("bola")
 
     def prazo_dias(self):
         return 1
@@ -72,7 +106,7 @@ class Bola(Equipamento):
 class Colete(Equipamento):
     def __init__(self, codigo, nome):
         super().__init__(codigo, nome)
-        self.categoria = "colete"
+        self._definir_categoria("colete")
 
     def prazo_dias(self):
         return 1
@@ -81,7 +115,7 @@ class Colete(Equipamento):
 class Raquete(Equipamento):
     def __init__(self, codigo, nome):
         super().__init__(codigo, nome)
-        self.categoria = "raquete"
+        self._definir_categoria("raquete")
 
     def prazo_dias(self):
         return 2
@@ -90,7 +124,7 @@ class Raquete(Equipamento):
 class Bicicleta(Equipamento):
     def __init__(self, codigo, nome):
         super().__init__(codigo, nome)
-        self.categoria = "bicicleta"
+        self._definir_categoria("bicicleta")
 
     def prazo_dias(self):
         return 7
